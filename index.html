@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Polymode3D — קטלוג</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0f0f0f;
+      --card: #1a1a1a;
+      --card2: #222;
+      --accent: #e63946;
+      --gold: #f4a261;
+      --text: #f0f0f0;
+      --muted: #888;
+      --border: #2a2a2a;
+      --radius: 16px;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', Arial, sans-serif;
+      min-height: 100vh;
+      padding-bottom: 90px;
+    }
+
+    /* ── Header ── */
+    header {
+      background: linear-gradient(135deg, #1a1a1a, #111);
+      padding: 16px 20px 12px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .logo {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      background: linear-gradient(90deg, #fff, var(--gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .cart-btn {
+      background: var(--accent);
+      border: none;
+      border-radius: 20px;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 700;
+      padding: 8px 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: transform .1s;
+    }
+
+    .cart-btn:active { transform: scale(.95); }
+
+    .cart-count {
+      background: #fff;
+      color: var(--accent);
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+    }
+
+    /* ── Categories ── */
+    .cats {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 0 2px;
+      scrollbar-width: none;
+    }
+    .cats::-webkit-scrollbar { display: none; }
+
+    .cat-btn {
+      background: var(--card);
+      border: 1.5px solid var(--border);
+      border-radius: 20px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 14px;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: all .2s;
+      flex-shrink: 0;
+    }
+
+    .cat-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    /* ── Grid ── */
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      padding: 14px 12px;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      transition: transform .15s;
+      position: relative;
+    }
+
+    .card:active { transform: scale(.97); }
+
+    .card-img {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      background: #111;
+    }
+
+    .badge {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: var(--accent);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 10px;
+      letter-spacing: .5px;
+    }
+
+    .card-body {
+      padding: 10px 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      flex: 1;
+    }
+
+    .card-cat {
+      font-size: 10px;
+      color: var(--gold);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+    }
+
+    .card-name {
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1.3;
+      color: var(--text);
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: auto;
+    }
+
+    .price-wrap { display: flex; flex-direction: column; }
+
+    .price {
+      font-size: 16px;
+      font-weight: 900;
+      color: #fff;
+    }
+
+    .old-price {
+      font-size: 11px;
+      color: var(--muted);
+      text-decoration: line-through;
+    }
+
+    .price-poa {
+      font-size: 11px;
+      color: var(--gold);
+      font-weight: 700;
+    }
+
+    .add-btn {
+      width: 32px;
+      height: 32px;
+      background: var(--accent);
+      border: none;
+      border-radius: 50%;
+      color: #fff;
+      font-size: 20px;
+      font-weight: 300;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform .1s;
+      flex-shrink: 0;
+    }
+
+    .add-btn:active { transform: scale(.9); }
+
+    /* qty control */
+    .qty {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .qty-btn {
+      width: 28px;
+      height: 28px;
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .qty-num {
+      font-size: 14px;
+      font-weight: 700;
+      min-width: 18px;
+      text-align: center;
+    }
+
+    /* ── Bottom Bar ── */
+    .bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(180deg, transparent, var(--bg) 20%);
+      padding: 10px 16px 20px;
+      z-index: 200;
+    }
+
+    .order-btn {
+      width: 100%;
+      background: linear-gradient(135deg, var(--accent), #c1121f);
+      border: none;
+      border-radius: 14px;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 800;
+      padding: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: transform .1s;
+      letter-spacing: .3px;
+    }
+
+    .order-btn:active { transform: scale(.98); }
+    .order-btn.hidden { display: none; }
+
+    .order-btn-total {
+      background: rgba(255,255,255,.2);
+      border-radius: 8px;
+      padding: 4px 10px;
+      font-size: 14px;
+    }
+
+    /* ── Cart Sheet ── */
+    .overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.7);
+      z-index: 300;
+    }
+
+    .overlay.show { display: flex; align-items: flex-end; }
+
+    .sheet {
+      background: var(--card);
+      border-radius: 24px 24px 0 0;
+      width: 100%;
+      max-height: 80vh;
+      overflow-y: auto;
+      padding: 20px 16px 40px;
+    }
+
+    .sheet-handle {
+      width: 40px;
+      height: 4px;
+      background: var(--border);
+      border-radius: 2px;
+      margin: 0 auto 20px;
+    }
+
+    .sheet-title {
+      font-size: 18px;
+      font-weight: 800;
+      margin-bottom: 16px;
+    }
+
+    .cart-item {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .cart-item img {
+      width: 54px;
+      height: 54px;
+      border-radius: 10px;
+      object-fit: cover;
+    }
+
+    .cart-item-info { flex: 1; }
+
+    .cart-item-name { font-size: 13px; font-weight: 700; }
+
+    .cart-item-price { font-size: 13px; color: var(--gold); font-weight: 700; margin-top: 2px; }
+
+    .cart-total {
+      font-size: 16px;
+      font-weight: 800;
+      text-align: left;
+      margin-top: 16px;
+      color: var(--gold);
+    }
+
+    .empty-cart {
+      text-align: center;
+      padding: 40px 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    /* ── Empty state ── */
+    .empty {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <div class="logo">POLYMODE 3D</div>
+    <button class="cart-btn" onclick="toggleCart()">
+      🛒 סל
+      <span class="cart-count" id="cart-count">0</span>
+    </button>
+  </div>
+  <div class="cats" id="cats"></div>
+</header>
+
+<div class="grid" id="grid"></div>
+
+<div class="bottom-bar">
+  <button class="order-btn hidden" id="order-btn" onclick="sendOrder()">
+    <span>🛒 לסיום הזמנה</span>
+    <span class="order-btn-total" id="order-total">₪0</span>
+  </button>
+</div>
+
+<div class="overlay" id="overlay" onclick="closeCart(event)">
+  <div class="sheet" id="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">🛒 סל הקניות</div>
+    <div id="cart-items"></div>
+    <div class="cart-total" id="cart-total-sheet"></div>
+  </div>
+</div>
+
+<script>
+const tg = window.Telegram?.WebApp;
+if (tg) { tg.ready(); tg.expand(); }
+
+const PRODUCTS = [
+  { id:1,  cat:'car',        catName:'🚗 רכב',       name:'מחזיק מפתחות כוורת',         price:35,  oldPrice:null, img:'https://res.cloudinary.com/djv6v984k/image/upload/v1780420247/%D7%A6%D7%99%D7%9C%D7%95%D7%9D_%D7%9E%D7%A1%D7%9A_2026-06-02_201031_srm9rr.png' },
+  { id:2,  cat:'car',        catName:'🚗 רכב',       name:'מחזיק ספינר למפתחות',        price:35,  oldPrice:null, img:'https://res.cloudinary.com/djv6v984k/image/upload/v1780419259/%D7%A6%D7%99%D7%9C%D7%95%D7%9D_%D7%9E%D7%A1%D7%9A_2026-06-02_194714_tgtzgj.png' },
+  { id:3,  cat:'models',     catName:'🗿 דגמים',     name:'פסלון נתניהו עם כתר',         price:99,  oldPrice:null, img:'https://res.cloudinary.com/djv6v984k/image/upload/v1780419251/IMG_4076_uj1jf0.jpg' },
+  { id:4,  cat:'accessories',catName:'🎮 אביזרים',   name:'מתקן תלייה PS5',              price:40,  oldPrice:null, img:'https://res.cloudinary.com/djv6v984k/image/upload/v1769545574/IMG_2995_n6ykla.jpg' },
+  { id:5,  cat:'accessories',catName:'🎮 אביזרים',   name:'מעמד Apple Watch + MagSafe',  price:60,  oldPrice:null, img:'https://res.cloudinary.com/djv6v984k/image/upload/v1769288939/%D7%97%D7%97%D7%97_jwwufl.png' },
+  { id:6,  cat:'accessories',catName:'🎮 אביזרים',   name:'מעמד לפן',                    price:55,  oldPrice:null, img:'https://res.cloudinary.com/djv6v984k/image/upload/v1769287799/%D7%9C%D7%9C%D7%9C_zvc1ws.png' },
+  { id:7,  cat:'judaica',    catName:'✡️ יודאיקה',  name:'שלט לבית',                    price:70,  oldPrice:null, img:'https://res.cloudinary.com/djv6v984k/image/upload/v1769542884/650b8513-5f1d-459f-93f2-2c6d6d49c867_v0xxmn.jpg' },
+  { id:8,  cat:'judaica',    catName:'✡️ יודאיקה',  name:'סט חמסות יודאיקה',            price:null,oldPrice:null, img:'https://res.cloudinary.com/djv6v984k/image/upload/v1769541688/IMG_2988_2_eb35gj.jpg' },
+  { id:9,  cat:'judaica',    catName:'✡️ יודאיקה',  name:'פמוטים עם ברכה',              price:150, oldPrice:null, img:'https://res.cloudinary.com/djv6v984k/image/upload/v1769291612/IMG_2891_ec0txc.jpg' },
+  { id:10, cat:'models',     catName:'🗿 דגמים',     name:'מטוס B2 מפציץ',               price:50,  oldPrice:null, img:'https://res.cloudinary.com/djv6v984k/image/upload/v1769289210/%D7%99%D7%94%D7%97%D7%98%D7%99_g6goa3.png' },
+  { id:11, cat:'pets',       catName:'🐾 חיות',      name:'מתקן רצועת כלב',              price:60,  oldPrice:null, img:'https://res.cloudinary.com/djv6v984k/image/upload/v1769542883/a275ad11-4889-4789-ba66-f9808ecf7299_tbjqqy.jpg' },
+  { id:12, cat:'pets',       catName:'🐾 חיות',      name:'משחק חטיפים לכלב',            price:90,  oldPrice:null, img:'https://res.cloudinary.com/djv6v984k/image/upload/v1769286619/%D7%AA%D7%AA_locaxd.png' },
+  { id:13, cat:'fidget',     catName:"🌀 פידגט'ים",  name:'גיטון פידגט',                 price:25,  oldPrice:null, img:'https://res.cloudinary.com/djv6v984k/image/upload/v1769288644/%D7%97%D7%97_iv7yyq.png' },
+  { id:14, cat:'fidget',     catName:"🌀 פידגט'ים",  name:'קליקר פידגט',                 price:25,  oldPrice:null, img:'https://res.cloudinary.com/djv6v984k/image/upload/v1769286620/%D7%93%D7%92_nwwz6k.png' },
+  { id:15, cat:'fidget',     catName:"🌀 פידגט'ים",  name:'פידגט Vortex תלת-ממדי',       price:45,  oldPrice:50,   img:'https://res.cloudinary.com/djv6v984k/image/upload/v1769281836/6_uw0bpf.png' },
+  { id:16, cat:'fidget',     catName:"🌀 פידגט'ים",  name:'הגה פורמולה + הילוכים',       price:40,  oldPrice:null, img:'https://res.cloudinary.com/djv6v984k/image/upload/v1769281835/5_guhhwg.png' },
+  { id:17, cat:'fidget',     catName:"🌀 פידגט'ים",  name:'פידגט מרובע היפנוטי',         price:40,  oldPrice:null, img:'https://res.cloudinary.com/djv6v984k/image/upload/v1769281832/2_uwagt1.png' },
+  { id:18, cat:'fidget',     catName:"🌀 פידגט'ים",  name:'קונוס ספירלה',                price:40,  oldPrice:60,   img:'https://res.cloudinary.com/djv6v984k/image/upload/v1769281831/%D7%AA%D7%9E%D7%95%D7%A0%D7%941_u4arvl.png' },
+  { id:19, cat:'fidget',     catName:"🌀 פידגט'ים",  name:'פידגט משושה היפנוטי',         price:48,  oldPrice:55,   img:'https://res.cloudinary.com/djv6v984k/image/upload/v1769281833/3_lcpnlj.png' },
+  { id:20, cat:'diy',        catName:'🎨 DIY',        name:'עיצוב אישי לפי דרישה',        price:null,oldPrice:null, img:'https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&q=80&w=800&h=600' },
+];
+
+const CATS = [
+  { key:'all',         label:'⭐ הכל' },
+  { key:'car',         label:'🚗 רכב' },
+  { key:'accessories', label:'🎮 אביזרים' },
+  { key:'models',      label:'🗿 דגמים' },
+  { key:'judaica',     label:'✡️ יודאיקה' },
+  { key:'fidget',      label:"🌀 פידגט'ים" },
+  { key:'pets',        label:'🐾 חיות' },
+  { key:'diy',         label:'🎨 DIY' },
+];
+
+let activeCat = 'all';
+const cart = {};
+
+// ── Render Categories ──────────────────────────────────────
+function renderCats() {
+  const el = document.getElementById('cats');
+  el.innerHTML = CATS.map(c =>
+    `<button class="cat-btn${activeCat===c.key?' active':''}" onclick="selectCat('${c.key}')">${c.label}</button>`
+  ).join('');
+}
+
+function selectCat(key) {
+  activeCat = key;
+  renderCats();
+  renderGrid();
+}
+
+// ── Render Grid ────────────────────────────────────────────
+function renderGrid() {
+  const products = activeCat === 'all' ? PRODUCTS : PRODUCTS.filter(p => p.cat === activeCat);
+  const el = document.getElementById('grid');
+
+  if (!products.length) {
+    el.innerHTML = '<div class="empty">אין מוצרים בקטגוריה זו</div>';
+    return;
+  }
+
+  el.innerHTML = products.map(p => {
+    const qty = cart[p.id] || 0;
+    const priceHtml = p.price
+      ? (p.oldPrice
+          ? `<div class="old-price">₪${p.oldPrice}</div><div class="price">₪${p.price}</div>`
+          : `<div class="price">₪${p.price}</div>`)
+      : `<div class="price-poa">מחיר לפי בקשה</div>`;
+
+    const badge = p.oldPrice ? `<div class="badge">🔥 מבצע</div>` : '';
+
+    const addControl = p.price
+      ? (qty > 0
+          ? `<div class="qty">
+               <button class="qty-btn" onclick="changeQty(${p.id},-1)">−</button>
+               <span class="qty-num">${qty}</span>
+               <button class="qty-btn" onclick="changeQty(${p.id},1)">+</button>
+             </div>`
+          : `<button class="add-btn" onclick="changeQty(${p.id},1)">+</button>`)
+      : `<button class="add-btn" style="background:#f4a261;font-size:13px;width:auto;border-radius:8px;padding:0 8px;" onclick="inquire(${p.id})">📞</button>`;
+
+    return `
+      <div class="card">
+        ${badge}
+        <img class="card-img" src="${p.img}" alt="${p.name}" loading="lazy" onerror="this.src='https://via.placeholder.com/300x300/1a1a1a/888?text=📦'"/>
+        <div class="card-body">
+          <div class="card-cat">${p.catName}</div>
+          <div class="card-name">${p.name}</div>
+          <div class="card-footer">
+            <div class="price-wrap">${priceHtml}</div>
+            ${addControl}
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+// ── Cart Logic ─────────────────────────────────────────────
+function changeQty(id, delta) {
+  cart[id] = Math.max(0, (cart[id] || 0) + delta);
+  if (cart[id] === 0) delete cart[id];
+  updateCartUI();
+  renderGrid();
+}
+
+function updateCartUI() {
+  const total = Object.entries(cart).reduce((sum, [id, qty]) => {
+    const p = PRODUCTS.find(x => x.id === parseInt(id));
+    return sum + (p?.price || 0) * qty;
+  }, 0);
+
+  const count = Object.values(cart).reduce((a, b) => a + b, 0);
+
+  document.getElementById('cart-count').textContent = count;
+  document.getElementById('order-total').textContent = `₪${total}`;
+
+  const btn = document.getElementById('order-btn');
+  btn.classList.toggle('hidden', count === 0);
+}
+
+function toggleCart() {
+  renderCartSheet();
+  document.getElementById('overlay').classList.add('show');
+}
+
+function closeCart(e) {
+  if (e.target === document.getElementById('overlay')) {
+    document.getElementById('overlay').classList.remove('show');
+  }
+}
+
+function renderCartSheet() {
+  const items = Object.entries(cart);
+  const el = document.getElementById('cart-items');
+  const totalEl = document.getElementById('cart-total-sheet');
+
+  if (!items.length) {
+    el.innerHTML = '<div class="empty-cart">🛒 הסל ריק<br><small>הוסף מוצרים מהקטלוג</small></div>';
+    totalEl.textContent = '';
+    return;
+  }
+
+  let total = 0;
+  el.innerHTML = items.map(([id, qty]) => {
+    const p = PRODUCTS.find(x => x.id === parseInt(id));
+    if (!p) return '';
+    const line = (p.price || 0) * qty;
+    total += line;
+    return `
+      <div class="cart-item">
+        <img src="${p.img}" alt="${p.name}" />
+        <div class="cart-item-info">
+          <div class="cart-item-name">${p.name}</div>
+          <div class="cart-item-price">${qty} × ₪${p.price} = ₪${line}</div>
+        </div>
+        <div class="qty">
+          <button class="qty-btn" onclick="changeQty(${p.id},-1);renderCartSheet()">−</button>
+          <span class="qty-num">${qty}</span>
+          <button class="qty-btn" onclick="changeQty(${p.id},1);renderCartSheet()">+</button>
+        </div>
+      </div>`;
+  }).join('');
+
+  totalEl.textContent = `סה"כ: ₪${total}`;
+}
+
+function inquire(id) {
+  const p = PRODUCTS.find(x => x.id === id);
+  if (!p) return;
+  if (tg) {
+    tg.sendData(JSON.stringify({ type: 'inquiry', product: p.name }));
+  } else {
+    alert(`פנייה לגבי: ${p.name}`);
+  }
+}
+
+function sendOrder() {
+  const items = Object.entries(cart).map(([id, qty]) => {
+    const p = PRODUCTS.find(x => x.id === parseInt(id));
+    return { name: p.name, price: p.price, qty };
+  });
+
+  const total = items.reduce((s, i) => s + i.price * i.qty, 0);
+
+  const data = JSON.stringify({ type: 'order', items, total });
+
+  if (tg) {
+    tg.sendData(data);
+  } else {
+    alert('הזמנה נשלחה:\n' + items.map(i => `${i.name} ×${i.qty}`).join('\n') + `\nסה"כ: ₪${total}`);
+  }
+}
+
+// ── Init ───────────────────────────────────────────────────
+renderCats();
+renderGrid();
+</script>
+</body>
+</html>
