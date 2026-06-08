@@ -136,6 +136,34 @@
     .ci-price{font-size:12px;color:var(--accent);font-weight:700;margin-top:2px}
     .sh-total{font-size:15px;font-weight:800;text-align:left;margin-top:14px;color:var(--accent)}
     .empty-msg{text-align:center;padding:40px 0;color:var(--muted)}
+
+    /* CHECKOUT SHEET */
+    .checkout-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:400}
+    .checkout-ov.on{display:flex;align-items:flex-end}
+    .checkout-sheet{
+      background:var(--white);border-radius:22px 22px 0 0;
+      width:100%;padding:20px 16px 36px;
+    }
+    .checkout-title{font-size:17px;font-weight:800;margin-bottom:6px}
+    .checkout-sub{font-size:13px;color:var(--muted);margin-bottom:18px}
+    .checkout-items{background:var(--bg);border-radius:12px;padding:12px;margin-bottom:18px}
+    .checkout-row{display:flex;justify-content:space-between;font-size:13px;padding:4px 0}
+    .checkout-row.total{font-weight:800;font-size:15px;border-top:1px solid var(--border);margin-top:6px;padding-top:8px;color:var(--accent)}
+    .field{margin-bottom:14px}
+    .field label{display:block;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:6px}
+    .field input{
+      width:100%;border:1.5px solid var(--border);border-radius:10px;
+      padding:12px 14px;font-size:15px;outline:none;
+      transition:border .15s;background:var(--bg);
+    }
+    .field input:focus{border-color:var(--accent)}
+    .confirm-btn{
+      width:100%;background:var(--accent);border:none;border-radius:var(--r);
+      color:#fff;font-size:15px;font-weight:800;
+      padding:15px;cursor:pointer;margin-top:6px;
+    }
+    .confirm-btn:active{opacity:.9}
+    .cancel-link{display:block;text-align:center;margin-top:12px;color:var(--muted);font-size:13px;cursor:pointer}
   </style>
 </head>
 <body>
@@ -157,6 +185,26 @@
     <span>🛒 סיום הזמנה</span>
     <span class="total-chip" id="ototal">₪0</span>
   </button>
+</div>
+
+<!-- CHECKOUT -->
+<div class="checkout-ov" id="ckov">
+  <div class="checkout-sheet">
+    <div class="handle"></div>
+    <div class="checkout-title">✅ סיום הזמנה</div>
+    <div class="checkout-sub">אנחנו ניצור איתך קשר בקרוב</div>
+    <div class="checkout-items" id="ck-items"></div>
+    <div class="field">
+      <label>👤 שם מלא</label>
+      <input id="ck-name" type="text" placeholder="ישראל ישראלי"/>
+    </div>
+    <div class="field">
+      <label>📱 טלפון</label>
+      <input id="ck-phone" type="tel" placeholder="050-0000000"/>
+    </div>
+    <button class="confirm-btn" onclick="confirmOrder()">📩 שלח הזמנה</button>
+    <span class="cancel-link" onclick="closeCheckout()">ביטול</span>
+  </div>
 </div>
 
 <div class="overlay" id="ov" onclick="closeCart(event)">
@@ -287,13 +335,47 @@ function rSheet(){
   document.getElementById('stotal').textContent=`סה"כ: ₪${total}`;
 }
 
-function inq(id){const p=P.find(x=>x.id==id);if(!p)return;tg?tg.sendData(JSON.stringify({type:'inquiry',product:p.name})):alert('פנייה: '+p.name)}
+function inq(id){
+  const p=P.find(x=>x.id==id);
+  if(!p)return;
+  // add to cart and open checkout
+  cart[p.id]=(cart[p.id]||0)+1;
+  updUI();
+  openCheckout();
+}
 
-function sendOrder(){
+function sendOrder(){ openCheckout(); }
+
+function openCheckout(){
+  const items=Object.entries(cart).map(([id,q])=>{const p=P.find(x=>x.id==id);return{name:p.name,price:p.price,qty:q,id:parseInt(id)}});
+  if(!items.length) return;
+  const total=items.reduce((s,i)=>s+(i.price||0)*i.qty,0);
+
+  // render summary
+  document.getElementById('ck-items').innerHTML=
+    items.map(i=>`<div class="checkout-row"><span>${i.name} ×${i.qty}</span><span>${i.price?'₪'+(i.price*i.qty):'לפי בקשה'}</span></div>`).join('')+
+    `<div class="checkout-row total"><span>סה"כ</span><span>₪${total}</span></div>`;
+
+  document.getElementById('ck-name').value='';
+  document.getElementById('ck-phone').value='';
+  document.getElementById('ckov').classList.add('on');
+}
+
+function closeCheckout(){ document.getElementById('ckov').classList.remove('on'); }
+
+function confirmOrder(){
+  const name=document.getElementById('ck-name').value.trim();
+  const phone=document.getElementById('ck-phone').value.trim();
+  if(!name){ document.getElementById('ck-name').focus(); return; }
+  if(!phone){ document.getElementById('ck-phone').focus(); return; }
+
   const items=Object.entries(cart).map(([id,q])=>{const p=P.find(x=>x.id==id);return{name:p.name,price:p.price,qty:q}});
-  const total=items.reduce((s,i)=>s+i.price*i.qty,0);
-  if(tg)tg.sendData(JSON.stringify({type:'order',items,total}));
-  else alert('הזמנה:\n'+items.map(i=>`${i.name} ×${i.qty}`).join('\n')+`\nסה"כ: ₪${total}`);
+  const total=items.reduce((s,i)=>s+(i.price||0)*i.qty,0);
+
+  const data=JSON.stringify({type:'order',items,total,name,phone});
+
+  if(tg){ tg.sendData(data); }
+  else { alert(`✅ ההזמנה נשלחה!\n${name} | ${phone}\nסה"כ: ₪${total}`); closeCheckout(); }
 }
 
 rCats();rGrid();
