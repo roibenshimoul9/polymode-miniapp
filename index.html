@@ -7,126 +7,43 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     *{box-sizing:border-box;margin:0;padding:0}
-    :root{
-      --accent:#e63946;
-      --gold:#f4a261;
-      --bg:#f5f5f5;
-      --white:#fff;
-      --text:#1a1a1a;
-      --muted:#888;
-      --border:#e8e8e8;
-      --r:14px;
-    }
+    :root{--accent:#e63946;--gold:#f4a261;--bg:#f5f5f5;--white:#fff;--text:#1a1a1a;--muted:#888;--border:#e8e8e8;--r:14px;}
     body{background:var(--bg);color:var(--text);font-family:'Segoe UI',Arial,sans-serif;padding-bottom:90px}
-
-    /* HEADER */
-    header{
-      background:var(--white);
-      padding:12px 16px 0;
-      position:sticky;top:0;z-index:100;
-      box-shadow:0 2px 8px rgba(0,0,0,.06);
-    }
+    header{background:var(--white);padding:12px 16px 0;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.06);}
     .header-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
     .logo{font-size:17px;font-weight:900;color:var(--text);letter-spacing:.5px}
     .logo span{color:var(--accent)}
-
-    .cart-pill{
-      background:var(--accent);border:none;border-radius:20px;
-      color:#fff;font-size:13px;font-weight:700;
-      padding:7px 14px;cursor:pointer;
-      display:flex;align-items:center;gap:6px;
-    }
-    .cart-pill .badge{
-      background:#fff;color:var(--accent);
-      border-radius:50%;width:18px;height:18px;
-      font-size:11px;font-weight:900;
-      display:flex;align-items:center;justify-content:center;
-    }
-
-    /* CATEGORIES */
+    .cart-pill{background:var(--accent);border:none;border-radius:20px;color:#fff;font-size:13px;font-weight:700;padding:7px 14px;cursor:pointer;display:flex;align-items:center;gap:6px;}
+    .cart-pill .badge{background:#fff;color:var(--accent);border-radius:50%;width:18px;height:18px;font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center;}
     .cats{display:flex;gap:8px;overflow-x:auto;padding:0 0 12px;scrollbar-width:none}
     .cats::-webkit-scrollbar{display:none}
-    .cat{
-      background:transparent;border:1.5px solid var(--border);
-      border-radius:20px;color:var(--muted);
-      font-size:12px;font-weight:600;padding:5px 13px;
-      white-space:nowrap;cursor:pointer;transition:all .15s;flex-shrink:0;
-    }
+    .cat{background:transparent;border:1.5px solid var(--border);border-radius:20px;color:var(--muted);font-size:12px;font-weight:600;padding:5px 13px;white-space:nowrap;cursor:pointer;transition:all .15s;flex-shrink:0;}
     .cat.on{background:var(--accent);border-color:var(--accent);color:#fff}
-
-    /* GRID */
     .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:12px}
-
-    /* CARD */
-    .card{
-      background:var(--white);border-radius:var(--r);
-      overflow:hidden;box-shadow:0 1px 6px rgba(0,0,0,.07);
-      display:flex;flex-direction:column;position:relative;
-    }
+    .card{background:var(--white);border-radius:var(--r);overflow:hidden;box-shadow:0 1px 6px rgba(0,0,0,.07);display:flex;flex-direction:column;position:relative;}
     .card-img{width:100%;aspect-ratio:1;object-fit:cover;background:#f0f0f0}
-    .sale-badge{
-      position:absolute;top:8px;right:8px;
-      background:var(--accent);color:#fff;
-      font-size:10px;font-weight:800;
-      padding:2px 7px;border-radius:8px;
-    }
+    .sale-badge{position:absolute;top:8px;right:8px;background:var(--accent);color:#fff;font-size:10px;font-weight:800;padding:2px 7px;border-radius:8px;}
     .card-body{padding:9px 10px 10px;flex:1;display:flex;flex-direction:column;gap:4px}
     .card-cat{font-size:10px;color:var(--gold);font-weight:700;text-transform:uppercase}
     .card-name{font-size:12px;font-weight:700;line-height:1.3;color:var(--text)}
     .card-foot{display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:6px}
-
     .price-col{display:flex;flex-direction:column}
     .price{font-size:15px;font-weight:900;color:var(--text)}
     .old{font-size:10px;color:var(--muted);text-decoration:line-through}
     .poa{font-size:11px;color:var(--gold);font-weight:700}
-
-    /* ADD / QTY */
-    .add{
-      width:30px;height:30px;border-radius:50%;
-      background:var(--accent);border:none;
-      color:#fff;font-size:20px;line-height:1;
-      cursor:pointer;display:flex;align-items:center;justify-content:center;
-      transition:transform .1s;flex-shrink:0;
-    }
+    .add{width:30px;height:30px;border-radius:50%;background:var(--accent);border:none;color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .1s;flex-shrink:0;}
     .add:active{transform:scale(.9)}
     .qty{display:flex;align-items:center;gap:5px}
-    .qbtn{
-      width:26px;height:26px;border-radius:50%;
-      background:var(--bg);border:1.5px solid var(--border);
-      color:var(--text);font-size:15px;cursor:pointer;
-      display:flex;align-items:center;justify-content:center;
-    }
+    .qbtn{width:26px;height:26px;border-radius:50%;background:var(--bg);border:1.5px solid var(--border);color:var(--text);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
     .qnum{font-size:13px;font-weight:800;min-width:16px;text-align:center}
-
-    /* BOTTOM BAR */
-    .bar{
-      position:fixed;bottom:0;left:0;right:0;
-      background:linear-gradient(transparent,var(--bg) 30%);
-      padding:8px 14px 18px;z-index:200;
-    }
-    .order-btn{
-      width:100%;background:var(--accent);
-      border:none;border-radius:var(--r);
-      color:#fff;font-size:15px;font-weight:800;
-      padding:15px 20px;cursor:pointer;
-      display:flex;align-items:center;justify-content:space-between;
-      transition:transform .1s;
-    }
+    .bar{position:fixed;bottom:0;left:0;right:0;background:linear-gradient(transparent,var(--bg) 30%);padding:8px 14px 18px;z-index:200;}
+    .order-btn{width:100%;background:var(--accent);border:none;border-radius:var(--r);color:#fff;font-size:15px;font-weight:800;padding:15px 20px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:transform .1s;}
     .order-btn:active{transform:scale(.98)}
     .order-btn.hide{display:none}
-    .total-chip{
-      background:rgba(255,255,255,.25);
-      border-radius:8px;padding:3px 10px;font-size:14px;
-    }
-
-    /* CART SHEET */
+    .total-chip{background:rgba(255,255,255,.25);border-radius:8px;padding:3px 10px;font-size:14px;}
     .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:300}
     .overlay.on{display:flex;align-items:flex-end}
-    .sheet{
-      background:var(--white);border-radius:22px 22px 0 0;
-      width:100%;max-height:80vh;overflow-y:auto;
-      padding:18px 16px 36px;
-    }
+    .sheet{background:var(--white);border-radius:22px 22px 0 0;width:100%;max-height:80vh;overflow-y:auto;padding:18px 16px 36px;}
     .handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 18px}
     .sh-title{font-size:17px;font-weight:800;margin-bottom:14px}
     .ci{display:flex;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)}
@@ -136,14 +53,9 @@
     .ci-price{font-size:12px;color:var(--accent);font-weight:700;margin-top:2px}
     .sh-total{font-size:15px;font-weight:800;text-align:left;margin-top:14px;color:var(--accent)}
     .empty-msg{text-align:center;padding:40px 0;color:var(--muted)}
-
-    /* CHECKOUT SHEET */
     .checkout-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:400}
     .checkout-ov.on{display:flex;align-items:flex-end}
-    .checkout-sheet{
-      background:var(--white);border-radius:22px 22px 0 0;
-      width:100%;padding:20px 16px 36px;
-    }
+    .checkout-sheet{background:var(--white);border-radius:22px 22px 0 0;width:100%;padding:20px 16px 36px;}
     .checkout-title{font-size:17px;font-weight:800;margin-bottom:6px}
     .checkout-sub{font-size:13px;color:var(--muted);margin-bottom:18px}
     .checkout-items{background:var(--bg);border-radius:12px;padding:12px;margin-bottom:18px}
@@ -151,19 +63,12 @@
     .checkout-row.total{font-weight:800;font-size:15px;border-top:1px solid var(--border);margin-top:6px;padding-top:8px;color:var(--accent)}
     .field{margin-bottom:14px}
     .field label{display:block;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:6px}
-    .field input{
-      width:100%;border:1.5px solid var(--border);border-radius:10px;
-      padding:12px 14px;font-size:15px;outline:none;
-      transition:border .15s;background:var(--bg);
-    }
+    .field input{width:100%;border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;font-size:15px;outline:none;transition:border .15s;background:var(--bg);}
     .field input:focus{border-color:var(--accent)}
-    .confirm-btn{
-      width:100%;background:var(--accent);border:none;border-radius:var(--r);
-      color:#fff;font-size:15px;font-weight:800;
-      padding:15px;cursor:pointer;margin-top:6px;
-    }
+    .confirm-btn{width:100%;background:var(--accent);border:none;border-radius:var(--r);color:#fff;font-size:15px;font-weight:800;padding:15px;cursor:pointer;margin-top:6px;}
     .confirm-btn:active{opacity:.9}
     .cancel-link{display:block;text-align:center;margin-top:12px;color:var(--muted);font-size:13px;cursor:pointer}
+    .loading{grid-column:1/-1;text-align:center;padding:40px;color:var(--muted)}
   </style>
 </head>
 <body>
@@ -178,31 +83,30 @@
   <div class="cats" id="cats"></div>
 </header>
 
-<div class="grid" id="grid"></div>
+<div class="grid" id="grid"><div class="loading">⏳ טוען מוצרים...</div></div>
 
 <div class="bar">
   <button class="order-btn hide" id="obtn" onclick="sendOrder()">
     <span>🛒 סיום הזמנה</span>
-    <span class="total-chip" id="ototal">₪0</span>
+    <span class="total-chip" id="ototal">&#8362;0</span>
   </button>
 </div>
 
-<!-- CHECKOUT -->
 <div class="checkout-ov" id="ckov">
   <div class="checkout-sheet">
     <div class="handle"></div>
-    <div class="checkout-title">✅ סיום הזמנה</div>
+    <div class="checkout-title">&#x2705; סיום הזמנה</div>
     <div class="checkout-sub">אנחנו ניצור איתך קשר בקרוב</div>
     <div class="checkout-items" id="ck-items"></div>
     <div class="field">
-      <label>👤 שם מלא</label>
+      <label>&#x1F464; שם מלא</label>
       <input id="ck-name" type="text" placeholder="ישראל ישראלי"/>
     </div>
     <div class="field">
-      <label>📱 טלפון</label>
+      <label>&#x1F4F1; טלפון</label>
       <input id="ck-phone" type="tel" placeholder="050-0000000"/>
     </div>
-    <button class="confirm-btn" onclick="confirmOrder()">📩 שלח הזמנה</button>
+    <button class="confirm-btn" onclick="confirmOrder()">שלח הזמנה</button>
     <span class="cancel-link" onclick="closeCheckout()">ביטול</span>
   </div>
 </div>
@@ -210,175 +114,159 @@
 <div class="overlay" id="ov" onclick="closeCart(event)">
   <div class="sheet">
     <div class="handle"></div>
-    <div class="sh-title">🛒 סל הקניות</div>
+    <div class="sh-title">סל הקניות</div>
     <div id="citems"></div>
     <div class="sh-total" id="stotal"></div>
   </div>
 </div>
 
 <script>
-const tg=window.Telegram?.WebApp;
-if(tg){tg.ready();tg.expand()}
+const tg = window.Telegram?.WebApp;
+if (tg) { tg.ready(); tg.expand(); }
 
-const P=[
-  {id:1,cat:'car',cn:'🚗 רכב',name:'מחזיק מפתחות כוורת',price:35,old:null,img:'https://res.cloudinary.com/djv6v984k/image/upload/v1780420247/%D7%A6%D7%99%D7%9C%D7%95%D7%9D_%D7%9E%D7%A1%D7%9A_2026-06-02_201031_srm9rr.png'},
-  {id:2,cat:'car',cn:'🚗 רכב',name:'מחזיק ספינר למפתחות',price:35,old:null,img:'https://res.cloudinary.com/djv6v984k/image/upload/v1780419259/%D7%A6%D7%99%D7%9C%D7%95%D7%9D_%D7%9E%D7%A1%D7%9A_2026-06-02_194714_tgtzgj.png'},
-  {id:3,cat:'models',cn:'🗿 דגמים',name:'פסלון נתניהו עם כתר',price:99,old:null,img:'https://res.cloudinary.com/djv6v984k/image/upload/v1780419251/IMG_4076_uj1jf0.jpg'},
-  {id:4,cat:'acc',cn:'🎮 אביזרים',name:'מתקן תלייה PS5',price:40,old:null,img:'https://res.cloudinary.com/djv6v984k/image/upload/v1769545574/IMG_2995_n6ykla.jpg'},
-  {id:5,cat:'acc',cn:'🎮 אביזרים',name:'מעמד Apple Watch + MagSafe',price:60,old:null,img:'https://res.cloudinary.com/djv6v984k/image/upload/v1769288939/%D7%97%D7%97%D7%97_jwwufl.png'},
-  {id:6,cat:'acc',cn:'🎮 אביזרים',name:'מעמד לפן',price:55,old:null,img:'https://res.cloudinary.com/djv6v984k/image/upload/v1769287799/%D7%9C%D7%9C%D7%9C_zvc1ws.png'},
-  {id:7,cat:'jud',cn:'✡️ יודאיקה',name:'שלט לבית',price:70,old:null,img:'https://res.cloudinary.com/djv6v984k/image/upload/v1769542884/650b8513-5f1d-459f-93f2-2c6d6d49c867_v0xxmn.jpg'},
-  {id:8,cat:'jud',cn:'✡️ יודאיקה',name:'סט חמסות',price:null,old:null,img:'https://res.cloudinary.com/djv6v984k/image/upload/v1769541688/IMG_2988_2_eb35gj.jpg'},
-  {id:9,cat:'jud',cn:'✡️ יודאיקה',name:'פמוטים עם ברכה',price:150,old:null,img:'https://res.cloudinary.com/djv6v984k/image/upload/v1769291612/IMG_2891_ec0txc.jpg'},
-  {id:10,cat:'models',cn:'🗿 דגמים',name:'מטוס B2 מפציץ',price:50,old:null,img:'https://res.cloudinary.com/djv6v984k/image/upload/v1769289210/%D7%99%D7%94%D7%97%D7%98%D7%99_g6goa3.png'},
-  {id:11,cat:'pets',cn:'🐾 חיות',name:'מתקן רצועת כלב',price:60,old:null,img:'https://res.cloudinary.com/djv6v984k/image/upload/v1769542883/a275ad11-4889-4789-ba66-f9808ecf7299_tbjqqy.jpg'},
-  {id:12,cat:'pets',cn:'🐾 חיות',name:'משחק חטיפים לכלב',price:90,old:null,img:'https://res.cloudinary.com/djv6v984k/image/upload/v1769286619/%D7%AA%D7%AA_locaxd.png'},
-  {id:13,cat:'fidget',cn:"🌀 פידגט'ים",name:'גיטון פידגט',price:25,old:null,img:'https://res.cloudinary.com/djv6v984k/image/upload/v1769288644/%D7%97%D7%97_iv7yyq.png'},
-  {id:14,cat:'fidget',cn:"🌀 פידגט'ים",name:'קליקר פידגט',price:25,old:null,img:'https://res.cloudinary.com/djv6v984k/image/upload/v1769286620/%D7%93%D7%92_nwwz6k.png'},
-  {id:15,cat:'fidget',cn:"🌀 פידגט'ים",name:'פידגט Vortex',price:45,old:50,img:'https://res.cloudinary.com/djv6v984k/image/upload/v1769281836/6_uw0bpf.png'},
-  {id:16,cat:'fidget',cn:"🌀 פידגט'ים",name:'הגה פורמולה F1',price:40,old:null,img:'https://res.cloudinary.com/djv6v984k/image/upload/v1769281835/5_guhhwg.png'},
-  {id:17,cat:'fidget',cn:"🌀 פידגט'ים",name:'פידגט מרובע היפנוטי',price:40,old:null,img:'https://res.cloudinary.com/djv6v984k/image/upload/v1769281832/2_uwagt1.png'},
-  {id:18,cat:'fidget',cn:"🌀 פידגט'ים",name:'קונוס ספירלה',price:40,old:60,img:'https://res.cloudinary.com/djv6v984k/image/upload/v1769281831/%D7%AA%D7%9E%D7%95%D7%A0%D7%941_u4arvl.png'},
-  {id:19,cat:'fidget',cn:"🌀 פידגט'ים",name:'פידגט משושה היפנוטי',price:48,old:55,img:'https://res.cloudinary.com/djv6v984k/image/upload/v1769281833/3_lcpnlj.png'},
-  {id:20,cat:'diy',cn:'🎨 DIY',name:'עיצוב אישי לפי דרישה',price:null,old:null,img:'https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&q=80&w=800'},
-];
+let P = [];
+let cur = 'all';
+const cart = {};
 
-const CATS=[
-  {k:'all',l:'⭐ הכל'},
-  {k:'car',l:'🚗 רכב'},
-  {k:'acc',l:'🎮 אביזרים'},
-  {k:'models',l:'🗿 דגמים'},
-  {k:'jud',l:'✡️ יודאיקה'},
-  {k:'fidget',l:"🌀 פידגט'ים"},
-  {k:'pets',l:'🐾 חיות'},
-  {k:'diy',l:'🎨 DIY'},
-];
+const CAT_EMOJI = {
+  'מוצרים לרכב':'🚗', 'דגמים ודמויות תלת-ממד':'🗿', 'אביזרים':'🎮',
+  "פידג'טים":'🌀', 'יודאיקה ולבית':'✡️', 'בעלי חיים':'🐾', 'DIY':'🎨'
+};
 
-let cur='all';
-const cart={};
+async function loadProducts() {
+  try {
+    const r = await fetch('https://raw.githubusercontent.com/roibenshimoul9/polymode/main/constants.ts');
+    const ts = await r.text();
+    const modelsMatch = ts.match(/export const MODELS[^=]*=\s*\[([\s\S]*)\];/);
+    if (!modelsMatch) return;
+    const body = modelsMatch[1];
 
-function rCats(){
-  document.getElementById('cats').innerHTML=CATS.map(c=>
-    `<button class="cat${cur===c.k?' on':''}" onclick="sCat('${c.k}')">${c.l}</button>`
+    const blocks = [];
+    let depth = 0, start = -1;
+    for (let i = 0; i < body.length; i++) {
+      if (body[i] === '{') { if (depth === 0) start = i; depth++; }
+      else if (body[i] === '}') {
+        depth--;
+        if (depth === 0 && start !== -1) { blocks.push(body.slice(start, i + 1)); start = -1; }
+      }
+    }
+
+    P = blocks.map(block => {
+      const get = k => { const m = block.match(new RegExp(k + `:\\s*['"\`]([^'"\`]+)['"\`]`)); return m ? m[1] : null; };
+      const getNum = k => { const m = block.match(new RegExp(k + `:\\s*([\\d.]+)`)); return m ? parseFloat(m[1]) : null; };
+      const getBool = k => { const m = block.match(new RegExp(k + `:\\s*(true|false)`)); return m ? m[1] === 'true' : false; };
+      const imgs = [...block.matchAll(/['"]([^'"]+cloudinary[^'"]+)['"]/g)].map(m => m[1]);
+      const id = get('id'), name = get('name'), cat = get('category'), price = getNum('price'), isOnSale = getBool('isOnSale');
+      if (!id || !name) return null;
+      const emoji = CAT_EMOJI[cat] || '📦';
+      return { id, name, cat, cn: emoji + ' ' + cat, price, old: isOnSale && price ? price : null, img: imgs[0] || '' };
+    }).filter(Boolean);
+  } catch(e) {
+    console.error('שגיאה בטעינת מוצרים:', e);
+  }
+  rCats();
+  rGrid();
+}
+
+function rCats() {
+  const catKeys = [...new Set(P.map(p => p.cat))];
+  const cats = [{ k: 'all', l: '⭐ הכל' }, ...catKeys.map(k => ({ k, l: P.find(p => p.cat === k).cn }))];
+  document.getElementById('cats').innerHTML = cats.map(c =>
+    `<button class="cat${cur === c.k ? ' on' : ''}" onclick="sCat('${c.k}')">${c.l}</button>`
   ).join('');
 }
 
-function sCat(k){cur=k;rCats();rGrid()}
+function sCat(k) { cur = k; rCats(); rGrid(); }
 
-function rGrid(){
-  const list=cur==='all'?P:P.filter(p=>p.cat===cur);
-  document.getElementById('grid').innerHTML=list.map(p=>{
-    const q=cart[p.id]||0;
-    const priceH=p.price
-      ?(p.old?`<span class="old">₪${p.old}</span><span class="price">₪${p.price}</span>`
-              :`<span class="price">₪${p.price}</span>`)
-      :`<span class="poa">לפי בקשה</span>`;
-    const ctrl=p.price
-      ?(q>0
-        ?`<div class="qty">
-            <button class="qbtn" onclick="chg(${p.id},-1)">−</button>
-            <span class="qnum">${q}</span>
-            <button class="qbtn" onclick="chg(${p.id},1)">+</button>
-          </div>`
-        :`<button class="add" onclick="chg(${p.id},1)">+</button>`)
-      :`<button class="add" style="background:var(--gold);font-size:11px;width:auto;border-radius:8px;padding:0 8px" onclick="inq(${p.id})">צור קשר</button>`;
-    return`<div class="card">
-      ${p.old?'<div class="sale-badge">🔥 מבצע</div>':''}
-      <img class="card-img" src="${p.img}" loading="lazy" onerror="this.src='https://placehold.co/300x300/f0f0f0/888?text=📦'"/>
+function rGrid() {
+  const list = cur === 'all' ? P : P.filter(p => p.cat === cur);
+  if (!list.length) {
+    document.getElementById('grid').innerHTML = '<div class="loading">אין מוצרים</div>';
+    return;
+  }
+  document.getElementById('grid').innerHTML = list.map(p => {
+    const q = cart[p.id] || 0;
+    const priceH = p.price
+      ? (p.old ? `<span class="old">&#8362;${p.old}</span><span class="price">&#8362;${p.price}</span>`
+               : `<span class="price">&#8362;${p.price}</span>`)
+      : `<span class="poa">לפי בקשה</span>`;
+    const ctrl = p.price
+      ? (q > 0
+          ? `<div class="qty"><button class="qbtn" onclick="chg('${p.id}',-1)">-</button><span class="qnum">${q}</span><button class="qbtn" onclick="chg('${p.id}',1)">+</button></div>`
+          : `<button class="add" onclick="chg('${p.id}',1)">+</button>`)
+      : `<button class="add" style="background:var(--gold);font-size:10px;width:auto;border-radius:8px;padding:0 8px" onclick="inq('${p.id}')">בקשה</button>`;
+    return `<div class="card">
+      ${p.old ? '<div class="sale-badge">מבצע</div>' : ''}
+      <img class="card-img" src="${p.img}" loading="lazy" onerror="this.src='https://placehold.co/300x300/f0f0f0/888?text=?'"/>
       <div class="card-body">
         <div class="card-cat">${p.cn}</div>
         <div class="card-name">${p.name}</div>
-        <div class="card-foot">
-          <div class="price-col">${priceH}</div>
-          ${ctrl}
-        </div>
+        <div class="card-foot"><div class="price-col">${priceH}</div>${ctrl}</div>
       </div>
     </div>`;
   }).join('');
 }
 
-function chg(id,d){
-  cart[id]=Math.max(0,(cart[id]||0)+d);
-  if(!cart[id])delete cart[id];
-  updUI();rGrid();
+function chg(id, d) {
+  cart[id] = Math.max(0, (cart[id] || 0) + d);
+  if (!cart[id]) delete cart[id];
+  updUI(); rGrid();
 }
 
-function updUI(){
-  const total=Object.entries(cart).reduce((s,[id,q])=>{const p=P.find(x=>x.id==id);return s+(p?.price||0)*q},0);
-  const count=Object.values(cart).reduce((a,b)=>a+b,0);
-  document.getElementById('cnt').textContent=count;
-  document.getElementById('ototal').textContent=`₪${total}`;
-  document.getElementById('obtn').classList.toggle('hide',count===0);
+function updUI() {
+  const total = Object.entries(cart).reduce((s, [id, q]) => { const p = P.find(x => x.id === id); return s + (p?.price || 0) * q; }, 0);
+  const count = Object.values(cart).reduce((a, b) => a + b, 0);
+  document.getElementById('cnt').textContent = count;
+  document.getElementById('ototal').textContent = '&#8362;' + total;
+  document.getElementById('obtn').classList.toggle('hide', count === 0);
 }
 
-function openCart(){rSheet();document.getElementById('ov').classList.add('on')}
-function closeCart(e){if(e.target===document.getElementById('ov'))document.getElementById('ov').classList.remove('on')}
+function openCart() { rSheet(); document.getElementById('ov').classList.add('on'); }
+function closeCart(e) { if (e.target === document.getElementById('ov')) document.getElementById('ov').classList.remove('on'); }
 
-function rSheet(){
-  const items=Object.entries(cart);
-  const el=document.getElementById('citems');
-  if(!items.length){el.innerHTML='<div class="empty-msg">🛒 הסל ריק</div>';document.getElementById('stotal').textContent='';return}
-  let total=0;
-  el.innerHTML=items.map(([id,q])=>{
-    const p=P.find(x=>x.id==id);if(!p)return'';
-    const line=(p.price||0)*q;total+=line;
-    return`<div class="ci">
-      <img src="${p.img}"/>
-      <div class="ci-info"><div class="ci-name">${p.name}</div><div class="ci-price">${q} × ₪${p.price} = ₪${line}</div></div>
-      <div class="qty">
-        <button class="qbtn" onclick="chg(${p.id},-1);rSheet()">−</button>
-        <span class="qnum">${q}</span>
-        <button class="qbtn" onclick="chg(${p.id},1);rSheet()">+</button>
-      </div>
-    </div>`;
+function rSheet() {
+  const items = Object.entries(cart);
+  const el = document.getElementById('citems');
+  if (!items.length) { el.innerHTML = '<div class="empty-msg">הסל ריק</div>'; document.getElementById('stotal').textContent = ''; return; }
+  let total = 0;
+  el.innerHTML = items.map(([id, q]) => {
+    const p = P.find(x => x.id === id); if (!p) return '';
+    const line = (p.price || 0) * q; total += line;
+    return `<div class="ci"><img src="${p.img}"/><div class="ci-info"><div class="ci-name">${p.name}</div><div class="ci-price">${q} x &#8362;${p.price} = &#8362;${line}</div></div><div class="qty"><button class="qbtn" onclick="chg('${p.id}',-1);rSheet()">-</button><span class="qnum">${q}</span><button class="qbtn" onclick="chg('${p.id}',1);rSheet()">+</button></div></div>`;
   }).join('');
-  document.getElementById('stotal').textContent=`סה"כ: ₪${total}`;
+  document.getElementById('stotal').textContent = 'סה"כ: ₪' + total;
 }
 
-function inq(id){
-  const p=P.find(x=>x.id==id);
-  if(!p)return;
-  // add to cart and open checkout
-  cart[p.id]=(cart[p.id]||0)+1;
-  updUI();
-  openCheckout();
-}
+function inq(id) { const p = P.find(x => x.id === id); if (!p) return; cart[p.id] = (cart[p.id] || 0) + 1; updUI(); openCheckout(); }
+function sendOrder() { openCheckout(); }
 
-function sendOrder(){ openCheckout(); }
-
-function openCheckout(){
-  const items=Object.entries(cart).map(([id,q])=>{const p=P.find(x=>x.id==id);return{name:p.name,price:p.price,qty:q,id:parseInt(id)}});
-  if(!items.length) return;
-  const total=items.reduce((s,i)=>s+(i.price||0)*i.qty,0);
-
-  // render summary
-  document.getElementById('ck-items').innerHTML=
-    items.map(i=>`<div class="checkout-row"><span>${i.name} ×${i.qty}</span><span>${i.price?'₪'+(i.price*i.qty):'לפי בקשה'}</span></div>`).join('')+
-    `<div class="checkout-row total"><span>סה"כ</span><span>₪${total}</span></div>`;
-
-  document.getElementById('ck-name').value='';
-  document.getElementById('ck-phone').value='';
+function openCheckout() {
+  const items = Object.entries(cart).map(([id, q]) => { const p = P.find(x => x.id === id); return { name: p.name, price: p.price, qty: q, id }; });
+  if (!items.length) return;
+  const total = items.reduce((s, i) => s + (i.price || 0) * i.qty, 0);
+  document.getElementById('ck-items').innerHTML =
+    items.map(i => `<div class="checkout-row"><span>${i.name} x${i.qty}</span><span>${i.price ? '&#8362;' + (i.price * i.qty) : 'לפי בקשה'}</span></div>`).join('') +
+    `<div class="checkout-row total"><span>סה"כ</span><span>&#8362;${total}</span></div>`;
+  document.getElementById('ck-name').value = '';
+  document.getElementById('ck-phone').value = '';
   document.getElementById('ckov').classList.add('on');
 }
 
-function closeCheckout(){ document.getElementById('ckov').classList.remove('on'); }
+function closeCheckout() { document.getElementById('ckov').classList.remove('on'); }
 
-function confirmOrder(){
-  const name=document.getElementById('ck-name').value.trim();
-  const phone=document.getElementById('ck-phone').value.trim();
-  if(!name){ document.getElementById('ck-name').focus(); return; }
-  if(!phone){ document.getElementById('ck-phone').focus(); return; }
-
-  const items=Object.entries(cart).map(([id,q])=>{const p=P.find(x=>x.id==id);return{name:p.name,price:p.price,qty:q}});
-  const total=items.reduce((s,i)=>s+(i.price||0)*i.qty,0);
-
-  const data=JSON.stringify({type:'order',items,total,name,phone});
-
-  if(tg){ tg.sendData(data); }
-  else { alert(`✅ ההזמנה נשלחה!\n${name} | ${phone}\nסה"כ: ₪${total}`); closeCheckout(); }
+function confirmOrder() {
+  const name = document.getElementById('ck-name').value.trim();
+  const phone = document.getElementById('ck-phone').value.trim();
+  if (!name) { document.getElementById('ck-name').focus(); return; }
+  if (!phone) { document.getElementById('ck-phone').focus(); return; }
+  const items = Object.entries(cart).map(([id, q]) => { const p = P.find(x => x.id === id); return { name: p.name, price: p.price, qty: q }; });
+  const total = items.reduce((s, i) => s + (i.price || 0) * i.qty, 0);
+  const data = JSON.stringify({ type: 'order', items, total, name, phone });
+  if (tg) { tg.sendData(data); }
+  else { alert('ההזמנה נשלחה!\n' + name + ' | ' + phone + '\nסה"כ: ₪' + total); closeCheckout(); }
 }
 
-rCats();rGrid();
+loadProducts();
 </script>
 </body>
 </html>
