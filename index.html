@@ -149,6 +149,7 @@ async function loadProducts() {
     if (!match) return;
     const cleaned = match[1].replace(/,\s*([\]\}])/g, '$1');
     const catalog = JSON.parse(cleaned);
+    const IMG_BASE = 'https://raw.githubusercontent.com/roibenshimoul9/or-bereshit/main/img/';
     P = catalog.map(p => ({
       id: p.id,
       name: p.name,
@@ -157,6 +158,7 @@ async function loadProducts() {
       price: p.price || null,
       material: p.material || '',
       emoji: PROD_EMOJI[p.id] || '✨',
+      img: IMG_BASE + p.id + '-1.webp',
     }));
   } catch(e) {
     console.error('שגיאה:', e);
@@ -189,7 +191,7 @@ function rGrid() {
           : `<button class="add" onclick="chg('${p.id}',1)">+</button>`)
       : `<button class="add" style="background:var(--gold);font-size:10px;width:auto;border-radius:8px;padding:0 8px" onclick="inq('${p.id}')">פנייה</button>`;
     return `<div class="card">
-      <div class="card-img">${p.emoji}</div>
+      <img class="card-img" src="${p.img}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" /><div class="card-img" style="display:none">${p.emoji}</div>
       <div class="card-body">
         <div class="card-cat">${p.cn}</div>
         <div class="card-name">${p.name}</div>
