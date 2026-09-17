@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
-  <title>Polymode3D</title>
+  <title>אור בראשית</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     *{box-sizing:border-box;margin:0;padding:0}
-    :root{--accent:#e63946;--gold:#f4a261;--bg:#f5f5f5;--white:#fff;--text:#1a1a1a;--muted:#888;--border:#e8e8e8;--r:14px;}
+    :root{--accent:#7c5cbf;--gold:#c9a84c;--bg:#f8f6f2;--white:#fff;--text:#1a1a1a;--muted:#888;--border:#e8e8e8;--r:14px;}
     body{background:var(--bg);color:var(--text);font-family:'Segoe UI',Arial,sans-serif;padding-bottom:90px}
     header{background:var(--white);padding:12px 16px 0;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.06);}
     .header-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
@@ -21,15 +21,14 @@
     .cat.on{background:var(--accent);border-color:var(--accent);color:#fff}
     .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:12px}
     .card{background:var(--white);border-radius:var(--r);overflow:hidden;box-shadow:0 1px 6px rgba(0,0,0,.07);display:flex;flex-direction:column;position:relative;}
-    .card-img{width:100%;aspect-ratio:1;object-fit:cover;background:#f0f0f0}
-    .sale-badge{position:absolute;top:8px;right:8px;background:var(--accent);color:#fff;font-size:10px;font-weight:800;padding:2px 7px;border-radius:8px;}
+    .card-img{width:100%;aspect-ratio:1;object-fit:cover;background:#f0f0f0;display:flex;align-items:center;justify-content:center;font-size:40px;}
     .card-body{padding:9px 10px 10px;flex:1;display:flex;flex-direction:column;gap:4px}
     .card-cat{font-size:10px;color:var(--gold);font-weight:700;text-transform:uppercase}
     .card-name{font-size:12px;font-weight:700;line-height:1.3;color:var(--text)}
+    .card-mat{font-size:10px;color:var(--muted);line-height:1.3}
     .card-foot{display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:6px}
     .price-col{display:flex;flex-direction:column}
     .price{font-size:15px;font-weight:900;color:var(--text)}
-    .old{font-size:10px;color:var(--muted);text-decoration:line-through}
     .poa{font-size:11px;color:var(--gold);font-weight:700}
     .add{width:30px;height:30px;border-radius:50%;background:var(--accent);border:none;color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .1s;flex-shrink:0;}
     .add:active{transform:scale(.9)}
@@ -47,7 +46,7 @@
     .handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 18px}
     .sh-title{font-size:17px;font-weight:800;margin-bottom:14px}
     .ci{display:flex;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)}
-    .ci img{width:52px;height:52px;border-radius:10px;object-fit:cover}
+    .ci-emoji{width:52px;height:52px;border-radius:10px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;}
     .ci-info{flex:1}
     .ci-name{font-size:13px;font-weight:700}
     .ci-price{font-size:12px;color:var(--accent);font-weight:700;margin-top:2px}
@@ -75,7 +74,7 @@
 
 <header>
   <div class="header-row">
-    <div class="logo">POLYMODE<span>3D</span></div>
+    <div class="logo">אור <span>בראשית</span></div>
     <button class="cart-pill" onclick="openCart()">
       🛒 סל <span class="badge" id="cnt">0</span>
     </button>
@@ -95,15 +94,15 @@
 <div class="checkout-ov" id="ckov">
   <div class="checkout-sheet">
     <div class="handle"></div>
-    <div class="checkout-title">&#x2705; סיום הזמנה</div>
-    <div class="checkout-sub">אנחנו ניצור איתך קשר בקרוב</div>
+    <div class="checkout-title">✅ סיום הזמנה</div>
+    <div class="checkout-sub">ניצור איתך קשר בקרוב 🙏</div>
     <div class="checkout-items" id="ck-items"></div>
     <div class="field">
-      <label>&#x1F464; שם מלא</label>
+      <label>👤 שם מלא</label>
       <input id="ck-name" type="text" placeholder="ישראל ישראלי"/>
     </div>
     <div class="field">
-      <label>&#x1F4F1; טלפון</label>
+      <label>📱 טלפון</label>
       <input id="ck-phone" type="tel" placeholder="050-0000000"/>
     </div>
     <button class="confirm-btn" onclick="confirmOrder()">שלח הזמנה</button>
@@ -128,41 +127,39 @@ let P = [];
 let cur = 'all';
 const cart = {};
 
-const CAT_EMOJI = {
-  'מוצרים לרכב':'🚗', 'דגמים ודמויות תלת-ממד':'🗿', 'אביזרים':'🎮',
-  "פידג'טים":'🌀', 'יודאיקה ולבית':'✡️', 'בעלי חיים':'🐾', 'DIY':'🎨'
+const CAT_EMOJI = { 'יודאיקה': '✡️', 'לבית': '🏠' };
+const PROD_EMOJI = {
+  'personal-memorial-candle': '🕯️',
+  'custom-designed-mezuzah': '📜',
+  'custom-designed-netla': '🫙',
+  'designed-key-hanger': '🔑',
+  'stone-pattern-planter': '🌿',
+  'home-stand-decorative': '🏠',
+  'decorative-home-tray': '🍽️',
+  'home-door-sign-judaica': '🚪',
+  'hamsa-set-premium': '🧿',
+  'judaica-blessing-candlesticks': '🕍',
 };
 
 async function loadProducts() {
   try {
-    const r = await fetch('https://raw.githubusercontent.com/roibenshimoul9/polymode/main/constants.ts');
-    const ts = await r.text();
-    const modelsMatch = ts.match(/export const MODELS[^=]*=\s*\[([\s\S]*)\];/);
-    if (!modelsMatch) return;
-    const body = modelsMatch[1];
-
-    const blocks = [];
-    let depth = 0, start = -1;
-    for (let i = 0; i < body.length; i++) {
-      if (body[i] === '{') { if (depth === 0) start = i; depth++; }
-      else if (body[i] === '}') {
-        depth--;
-        if (depth === 0 && start !== -1) { blocks.push(body.slice(start, i + 1)); start = -1; }
-      }
-    }
-
-    P = blocks.map(block => {
-      const get = k => { const m = block.match(new RegExp(k + `:\\s*['"\`]([^'"\`]+)['"\`]`)); return m ? m[1] : null; };
-      const getNum = k => { const m = block.match(new RegExp(k + `:\\s*([\\d.]+)`)); return m ? parseFloat(m[1]) : null; };
-      const getBool = k => { const m = block.match(new RegExp(k + `:\\s*(true|false)`)); return m ? m[1] === 'true' : false; };
-      const imgs = [...block.matchAll(/['"]([^'"]+cloudinary[^'"]+)['"]/g)].map(m => m[1]);
-      const id = get('id'), name = get('name'), cat = get('category'), price = getNum('price'), isOnSale = getBool('isOnSale');
-      if (!id || !name) return null;
-      const emoji = CAT_EMOJI[cat] || '📦';
-      return { id, name, cat, cn: emoji + ' ' + cat, price, old: isOnSale && price ? price : null, img: imgs[0] || '' };
-    }).filter(Boolean);
+    const r = await fetch('https://raw.githubusercontent.com/roibenshimoul9/or-bereshit/main/lib/assistant-rules.js');
+    const js = await r.text();
+    const match = js.match(/export const CATALOG\s*=\s*(\[[\s\S]*?\]);/);
+    if (!match) return;
+    const cleaned = match[1].replace(/,\s*([\]\}])/g, '$1');
+    const catalog = JSON.parse(cleaned);
+    P = catalog.map(p => ({
+      id: p.id,
+      name: p.name,
+      cat: p.cat,
+      cn: (CAT_EMOJI[p.cat] || '📦') + ' ' + p.cat,
+      price: p.price || null,
+      material: p.material || '',
+      emoji: PROD_EMOJI[p.id] || '✨',
+    }));
   } catch(e) {
-    console.error('שגיאה בטעינת מוצרים:', e);
+    console.error('שגיאה:', e);
   }
   rCats();
   rGrid();
@@ -180,27 +177,23 @@ function sCat(k) { cur = k; rCats(); rGrid(); }
 
 function rGrid() {
   const list = cur === 'all' ? P : P.filter(p => p.cat === cur);
-  if (!list.length) {
-    document.getElementById('grid').innerHTML = '<div class="loading">אין מוצרים</div>';
-    return;
-  }
+  if (!list.length) { document.getElementById('grid').innerHTML = '<div class="loading">אין מוצרים</div>'; return; }
   document.getElementById('grid').innerHTML = list.map(p => {
     const q = cart[p.id] || 0;
     const priceH = p.price
-      ? (p.old ? `<span class="old">&#8362;${p.old}</span><span class="price">&#8362;${p.price}</span>`
-               : `<span class="price">&#8362;${p.price}</span>`)
+      ? `<span class="price">&#8362;${p.price}</span>`
       : `<span class="poa">לפי בקשה</span>`;
     const ctrl = p.price
       ? (q > 0
           ? `<div class="qty"><button class="qbtn" onclick="chg('${p.id}',-1)">-</button><span class="qnum">${q}</span><button class="qbtn" onclick="chg('${p.id}',1)">+</button></div>`
           : `<button class="add" onclick="chg('${p.id}',1)">+</button>`)
-      : `<button class="add" style="background:var(--gold);font-size:10px;width:auto;border-radius:8px;padding:0 8px" onclick="inq('${p.id}')">בקשה</button>`;
+      : `<button class="add" style="background:var(--gold);font-size:10px;width:auto;border-radius:8px;padding:0 8px" onclick="inq('${p.id}')">פנייה</button>`;
     return `<div class="card">
-      ${p.old ? '<div class="sale-badge">מבצע</div>' : ''}
-      <img class="card-img" src="${p.img}" loading="lazy" onerror="this.src='https://placehold.co/300x300/f0f0f0/888?text=?'"/>
+      <div class="card-img">${p.emoji}</div>
       <div class="card-body">
         <div class="card-cat">${p.cn}</div>
         <div class="card-name">${p.name}</div>
+        <div class="card-mat">${p.material}</div>
         <div class="card-foot"><div class="price-col">${priceH}</div>${ctrl}</div>
       </div>
     </div>`;
@@ -232,7 +225,7 @@ function rSheet() {
   el.innerHTML = items.map(([id, q]) => {
     const p = P.find(x => x.id === id); if (!p) return '';
     const line = (p.price || 0) * q; total += line;
-    return `<div class="ci"><img src="${p.img}"/><div class="ci-info"><div class="ci-name">${p.name}</div><div class="ci-price">${q} x &#8362;${p.price} = &#8362;${line}</div></div><div class="qty"><button class="qbtn" onclick="chg('${p.id}',-1);rSheet()">-</button><span class="qnum">${q}</span><button class="qbtn" onclick="chg('${p.id}',1);rSheet()">+</button></div></div>`;
+    return `<div class="ci"><div class="ci-emoji">${p.emoji}</div><div class="ci-info"><div class="ci-name">${p.name}</div><div class="ci-price">${q} × &#8362;${p.price} = &#8362;${line}</div></div><div class="qty"><button class="qbtn" onclick="chg('${p.id}',-1);rSheet()">-</button><span class="qnum">${q}</span><button class="qbtn" onclick="chg('${p.id}',1);rSheet()">+</button></div></div>`;
   }).join('');
   document.getElementById('stotal').textContent = 'סה"כ: ₪' + total;
 }
@@ -245,7 +238,7 @@ function openCheckout() {
   if (!items.length) return;
   const total = items.reduce((s, i) => s + (i.price || 0) * i.qty, 0);
   document.getElementById('ck-items').innerHTML =
-    items.map(i => `<div class="checkout-row"><span>${i.name} x${i.qty}</span><span>${i.price ? '&#8362;' + (i.price * i.qty) : 'לפי בקשה'}</span></div>`).join('') +
+    items.map(i => `<div class="checkout-row"><span>${i.name} ×${i.qty}</span><span>${i.price ? '&#8362;' + (i.price * i.qty) : 'לפי בקשה'}</span></div>`).join('') +
     `<div class="checkout-row total"><span>סה"כ</span><span>&#8362;${total}</span></div>`;
   document.getElementById('ck-name').value = '';
   document.getElementById('ck-phone').value = '';
