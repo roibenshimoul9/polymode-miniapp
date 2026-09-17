@@ -180,9 +180,17 @@ async function loadProducts() {
   try {
     const r = await fetch('https://raw.githubusercontent.com/roibenshimoul9/or-bereshit/main/lib/assistant-rules.js');
     const js = await r.text();
-    const match = js.match(/export const CATALOG\s*=\s*(\[[\s\S]*\]);/);
-    if (!match) { document.getElementById('grid').innerHTML = '<div class="loading">לא נמצאו מוצרים</div>'; return; }
-    const cleaned = match[1].replace(/,\s*([\]\}])/g, '$1');
+    const startIdx = js.indexOf('export const CATALOG');
+    if (startIdx === -1) { document.getElementById('grid').innerHTML = '<div class="loading">לא נמצאו מוצרים</div>'; return; }
+    const arrStart = js.indexOf('[', startIdx);
+    let depth = 0, end = -1;
+    for (let i = arrStart; i < js.length; i++) {
+      if (js[i] === '[') depth++;
+      else if (js[i] === ']') { depth--; if (depth === 0) { end = i; break; } }
+    }
+    if (end === -1) { document.getElementById('grid').innerHTML = '<div class="loading">שגיאה בקובץ</div>'; return; }
+    const raw = js.slice(arrStart, end + 1);
+    const cleaned = raw.replace(/,\s*([\]\}])/g, '$1');
     const catalog = JSON.parse(cleaned);
     const IMG_BASE = 'https://raw.githubusercontent.com/roibenshimoul9/or-bereshit/main/img/';
     P = catalog.map(p => ({
